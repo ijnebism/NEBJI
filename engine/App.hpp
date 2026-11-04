@@ -1,9 +1,7 @@
-#pragma once 
-#include <iostream>
+#pragma once
 #include <SFML/Graphics.hpp>
 
 class App {
 public:
-	App() = default;
-	void run();
+    void run();
 };
