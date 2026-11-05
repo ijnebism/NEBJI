@@ -1,5 +1,8 @@
 #include "App.hpp"
+#include "Input.hpp"
 #include <chrono>
+
+enum GameAction {MoveLeft, MoveRight};
 
 void App::run() {
     sf::RenderWindow window(sf::VideoMode({ 200, 200 }), "SFML works!");
@@ -12,7 +15,12 @@ void App::run() {
     double accumulator = 0.0;
 
     sf::Vector2f circlePos = { 0,0 };
-    double speed = 10;
+    double speed = 100;
+
+    Input input;
+    input.bind(MoveLeft, sf::Keyboard::Key::A);
+    input.bind(MoveRight, sf::Keyboard::Key::D);
+
 
     while (window.isOpen())
     {
@@ -21,6 +29,8 @@ void App::run() {
             if (event->is<sf::Event::Closed>())
                 window.close();
         }
+
+        input.update();
 
         double newTime = std::chrono::duration<double>(std::chrono::steady_clock::now().time_since_epoch()).count();
         auto frameTime = newTime - currentTime;
@@ -32,11 +42,16 @@ void App::run() {
         
         accumulator += frameTime;
         while (accumulator >= dt) {
-            circlePos.y += speed * dt;
-            shape.setPosition(circlePos);
+            if (input.isHeld(MoveLeft)) {
+                circlePos.x -= speed * dt;
+            }
+            if (input.isHeld(MoveRight)) {
+                circlePos.x += speed * dt;
+            }
             accumulator -= dt;
         }
 
+        shape.setPosition(circlePos);
         window.clear();
         window.draw(shape);
         window.display();

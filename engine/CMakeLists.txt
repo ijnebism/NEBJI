@@ -1,7 +1,7 @@
 add_executable(engine
 	main.cpp
 	App.cpp
-)
+ "Input.cpp")
 
 target_link_libraries(engine PRIVATE SFML::Graphics)
 
